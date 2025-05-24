@@ -37,3 +37,62 @@ CREATE TABLE social_accounts (
  user_id int,
  FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- table categories
+CREATE TABLE categories(
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ name VARCHAR(100) NOT NULL DEFAULT '' COMMENT 'name of category, for example: electric...'
+);
+
+-- table products
+CREATE TABLE products (
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ name VARCHAR(350) COMMENT 'product name',
+ price FLOAT NOT NULL CHECK(price >= 0), -- constraint price >= 0
+ thumnail VARCHAR(300) DEFAULT '', -- image url
+ description LONGTEXT DEFAULT '',
+ created_at DATETIME,
+ updated_at DATETIME,
+ category_id INT,
+ FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- table orders
+CREATE TABLE orders(
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ user_id INT,
+ FOREIGN KEY (user_id) REFERENCES users(id),
+ fullname VARCHAR(100) DEFAULT '',
+ email VARCHAR(20) NOT NULL,
+ phone_number VARCHAR(20) NOT NULL,
+ address VARCHAR(200) NOT NULL,
+ note VARCHAR(100) DEFAULT '',
+ order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+ status VARCHAR(20),
+ total_money FLOAT CHECK(total_money >= 0)
+);
+
+-- update table orders
+ALTER TABLE orders ADD COLUMN `shipping_method` VARCHAR(100);
+ALTER TABLE orders ADD COLUMN `shipping_address` VARCHAR(200);
+ALTER TABLE orders ADD COLUMN `shipping_date` DATE;
+ALTER TABLE orders ADD COLUMN `tracking_number` VARCHAR(100);
+ALTER TABLE orders ADD COLUMN `payment_method` VARCHAR(100);
+-- soft delete orders
+ALTER TABLE orders ADD COLUMN `active` TINYINT(1);
+
+-- modify table orders on field status
+ALTER TABLE orders MODIFY COLUMN status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') COMMENT 'Order status';
+
+-- table order_details
+CREATE TABLE order_details(
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ order_id INT,
+ FOREIGN KEY (order_id) REFERENCES orders (id),
+ product_id INT,
+ FOREIGN KEY (product_id) REFERENCES products (id),
+ price FLOAT CHECK(price >= 0),
+ number_of_products INT CHECK(number_of_products >= 0),
+ total_money FLOAT CHECK(total_money >= 0),
+ color VARCHAR(20) DEFAULT ''
+);
