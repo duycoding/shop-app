@@ -8,7 +8,8 @@ Day 01: Create database and design the system.
 + Table products: one category have many products.
 + Table orders: one orders have many products, one user have many orders.
 + Table order_details.
-![image](https://github.com/user-attachments/assets/32f183a0-6481-4f76-a6a9-f421de1d5953)
+![image](https://github.com/user-attachments/assets/2fb7d92c-8187-4966-bd9d-65c90b3f624a)
 
-Create a new brand and merge code...
+
+Udating ...
 
