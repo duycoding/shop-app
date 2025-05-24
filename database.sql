@@ -16,6 +16,10 @@ create table users (
  facebook_account_id INT DEFAULT 0
 );
 
+-- UPDATE TALBE USER WITH ROLES
+ALTER TABLE users ADD COLUMN `role_id` INT;
+ALTER TABLE users ADD FOREIGN KEY (role_id) REFERENCES roles(id);
+
 CREATE TABLE tokens (
  id int PRIMARY KEY AUTO_INCREMENT,
  token VARCHAR(255) UNIQUE NOT NULL,
@@ -95,4 +99,10 @@ CREATE TABLE order_details(
  number_of_products INT CHECK(number_of_products >= 0),
  total_money FLOAT CHECK(total_money >= 0),
  color VARCHAR(20) DEFAULT ''
+);
+
+-- table roles
+CREATE TABLE roles (
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ name VARCHAR(20)
 );
