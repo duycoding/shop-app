@@ -8,3 +8,4 @@ Day 01: Create database and design the system.
 + Table products: one category have many products.
 ![image](https://github.com/user-attachments/assets/32f183a0-6481-4f76-a6a9-f421de1d5953)
 
+-> Create table about roles, orders, order_details
