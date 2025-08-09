@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,22 +52,27 @@ public class ProductController {
                 return ResponseEntity.badRequest().body(listErrors);
             }
 
-            MultipartFile multipartFile = productDTO.getFile();
+            List<MultipartFile> files = productDTO.getFile();
+
+            files = files == null ? new ArrayList<>() : files;
+
             String filePath = null;
 
-            if (multipartFile != null && !multipartFile.isEmpty()) {
-                if (multipartFile.getSize() > 10 * 1024 * 1024) {
-                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                            .body("File is too large! File must be under 10 MB.");
-                }
+            for (MultipartFile multipartFile : files) {
+                if (multipartFile != null && !multipartFile.isEmpty()) {
+                    if (multipartFile.getSize() > 10 * 1024 * 1024) {
+                        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                                .body("File is too large! File must be under 10 MB.");
+                    }
 
-                String contentType = multipartFile.getContentType();
-                if (contentType == null || !contentType.startsWith("image/")) {
-                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                            .body("File must be an image!");
-                }
+                    String contentType = multipartFile.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                                .body("File must be an image!");
+                    }
 
-                filePath = storeFile(multipartFile); // Chỉ gọi khi chắc chắn hợp lệ
+                    filePath = storeFile(multipartFile); // Chỉ gọi khi chắc chắn hợp lệ
+                }
             }
 
             return ResponseEntity.ok("Product created successfully. File path: " + filePath);
